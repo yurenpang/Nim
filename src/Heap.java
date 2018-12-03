@@ -11,11 +11,11 @@ public class Heap extends GraphicsGroup {
         super(x,y);
         this.width=heapLength;
         this.id=id;
-        createHeap(x,y);
+        createHeap();
     }
 
-    private void createHeap(double x, double y){
-        Rectangle heap = new Rectangle(x, y, width, width);
+    private void createHeap(){
+        Rectangle heap = new Rectangle(0, 0, width, width);
         add(heap);
     }
 
