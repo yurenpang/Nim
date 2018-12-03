@@ -2,7 +2,7 @@ import comp124graphics.Ellipse;
 import comp124graphics.GraphicsGroup;
 
 public class Bean extends GraphicsGroup {
-    private static final double RADIUS_LENGTH = 20;
+    public static final double RADIUS_LENGTH = 20;
 
     private int id;
 

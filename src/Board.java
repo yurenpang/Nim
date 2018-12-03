@@ -1,14 +1,16 @@
 import comp124graphics.CanvasWindow;
+import java.util.Random;
 
 public class Board extends CanvasWindow {
     private double width, height;
     private double heapWidth;
     private double sideLength;
     private int numGrid;
-    private Heap heaps[];
+    private Heap[] heaps;
 
-    private final double HEAP_GAP = 10;
-    private final double RATIO = 0.6;
+    private static final double HEAP_GAP = 10;
+    private static final double RATIO = 0.6;
+    private static final int BEAN_UPPER_BOUND = 6;
 
     public Board(int width, int height, int numGrid) {
         super("Nim Game", width, height);
@@ -27,7 +29,9 @@ public class Board extends CanvasWindow {
         double xPos = 0.4 * (width - heapWidth);
         double yPos = 0.5 * (height - sideLength);
         for(int i = 0; i < numGrid; i++){
-            Heap heap = new Heap(xPos, yPos, sideLength, id);
+            Random random = new Random();
+            int numBean = 1+random.nextInt(BEAN_UPPER_BOUND);
+            Heap heap = new Heap(xPos, yPos, sideLength, id, numBean);
             heaps[i] = heap;
             add(heap);
             xPos += sideLength + HEAP_GAP;
