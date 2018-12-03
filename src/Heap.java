@@ -23,12 +23,18 @@ public class Heap extends GraphicsGroup {
         createHeap();
     }
 
+    /**
+     * Create the heap layout and add on GraphicsGroup
+     */
     private void createHeap(){
         Rectangle heap = new Rectangle(0, 0, width, width);
         add(heap);
         createBean();
     }
 
+    /**
+     * Create beans randomly on the heaps, called the Bean class
+     */
     private void createBean(){
         int beanId = 0;
         double xPos = X_BEAN_LEFT_BOUND, yPos = 0;
@@ -41,6 +47,11 @@ public class Heap extends GraphicsGroup {
         }
     }
 
+    /**
+     * Randomly generated a y position for the bean and
+     * ensures it is not falling out of bounds
+     * @return double: the bean's y position
+     */
     private double calculateY(){
         Random rand = new Random();
         return (width - Bean.RADIUS_LENGTH)*rand.nextDouble();
