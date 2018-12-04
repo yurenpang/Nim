@@ -1,5 +1,5 @@
-import comp124graphics.Ellipse;
 import comp124graphics.GraphicsGroup;
+import comp124graphics.GraphicsObject;
 import comp124graphics.Rectangle;
 
 import java.util.ArrayList;
@@ -55,6 +55,19 @@ public class Heap extends GraphicsGroup {
     private double calculateY(){
         Random rand = new Random();
         return (width - Bean.RADIUS_LENGTH)*rand.nextDouble();
+    }
+
+    /**
+     * Remove clicked bean in a heap
+     * @param clickedX
+     * @param clickedY
+     */
+    public void removeBeanInsideHeap(double clickedX, double clickedY) {
+        GraphicsObject currentObject = getElementAt(clickedX, clickedY);
+        System.out.println(currentObject);
+        if(currentObject instanceof Bean) {
+            remove(currentObject);
+        }
     }
 
     public int getId() {

@@ -1,12 +1,8 @@
 import comp124graphics.CanvasWindow;
-import comp124graphics.Ellipse;
-import comp124graphics.GraphicsGroup;
 import comp124graphics.GraphicsObject;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Board extends CanvasWindow implements MouseListener {
@@ -16,8 +12,7 @@ public class Board extends CanvasWindow implements MouseListener {
     private int numGrid;
     private int selectedHeapId;
     private int selectedBeanId;
-//    private Heap[] heaps;    uncommented this
-    private ArrayList<Heap> heaps;
+    private Heap[] heaps;
 
     private static final double HEAP_GAP = 10;
     private static final double RATIO = 0.6;
@@ -30,8 +25,7 @@ public class Board extends CanvasWindow implements MouseListener {
         this.numGrid = numGrid;
         this.heapWidth = width * RATIO;
         this.sideLength = calculateSideLength();
-//        this.heaps = new Heap[numGrid];    uncommented this
-        this.heaps = new ArrayList<Heap>();
+        this.heaps = new Heap[numGrid];
         this.selectedHeapId = -1;
         this.selectedBeanId = -1;
 
@@ -48,8 +42,7 @@ public class Board extends CanvasWindow implements MouseListener {
             Random random = new Random();
             int numBean = 1+random.nextInt(BEAN_UPPER_BOUND);
             Heap heap = new Heap(xPos, yPos, sideLength, id, numBean);
-//            heaps[i] = heap;  uncommented this
-            heaps.add(heap);
+            heaps[i] = heap;
             add(heap);
             xPos += sideLength + HEAP_GAP;
             id++;
@@ -64,20 +57,23 @@ public class Board extends CanvasWindow implements MouseListener {
         Board b = new Board(1000, 1000, 5);
     }
 
+    /**
+     * Find the Heap the user is clicking and remove it
+     * @param e
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
         GraphicsObject gObj = getElementAt(x, y);
-        if(gObj != null && gObj instanceof Heap) {
-            System.out.println("Cli");
+        if (gObj instanceof Heap) {
             Heap clickedHeap = (Heap) gObj;
             int index = clickedHeap.getId();
-            if(index == -1) {
-                System.out.println("ERROr");
+            if (index == -1) {
+                System.out.println("ERROR");
             } else {
                 selectedBeanId = index;
-                remove(clickedHeap);
+                clickedHeap.removeBeanInsideHeap(x, y);
             }
         }
     }

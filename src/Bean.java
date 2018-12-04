@@ -8,6 +8,7 @@ public class Bean extends Ellipse {
     public Bean(double x, double y, int id){
         super(x, y, RADIUS_LENGTH, RADIUS_LENGTH);
         this.id = id;
+        this.setFilled(true);
     }
 
     public int getId() {
