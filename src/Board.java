@@ -1,11 +1,14 @@
 import comp124graphics.CanvasWindow;
 import comp124graphics.GraphicsObject;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
-public class Board extends CanvasWindow implements MouseListener {
+public class Board extends CanvasWindow implements MouseListener, ActionListener {
     private double width, height;
     private double heapWidth;
     private double sideLength;
@@ -13,6 +16,7 @@ public class Board extends CanvasWindow implements MouseListener {
     private int selectedHeapId;
     private int selectedBeanId;
     private Heap[] heaps;
+    private boolean isFirstPlayer;
 
     private static final double HEAP_GAP = 10;
     private static final double RATIO = 0.6;
@@ -28,8 +32,10 @@ public class Board extends CanvasWindow implements MouseListener {
         this.heaps = new Heap[numGrid];
         this.selectedHeapId = -1;
         this.selectedBeanId = -1;
+        this.isFirstPlayer = true;
 
         createBoard();
+        createButton();
 
         addMouseListener(this);
     }
@@ -47,6 +53,13 @@ public class Board extends CanvasWindow implements MouseListener {
             xPos += sideLength + HEAP_GAP;
             id++;
         }
+    }
+
+    private void createButton(){
+        JButton b = new JButton("Click Here");
+        b.setBounds(50,100,95,30);
+        add(b);
+        b.addActionListener(this);
     }
 
     private double calculateSideLength() {
@@ -89,4 +102,11 @@ public class Board extends CanvasWindow implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        isFirstPlayer = !isFirstPlayer;
+        System.out.println(isFirstPlayer);
+
+    }
 }
