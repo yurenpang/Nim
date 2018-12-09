@@ -1,7 +1,9 @@
 import comp124graphics.CanvasWindow;
 import comp124graphics.GraphicsObject;
+import comp124graphics.GraphicsText;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,10 +19,18 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     private int selectedBeanId;
     private Heap[] heaps;
     private boolean isFirstPlayer;
+    private Heap clickedHeap;
+    private double x,y;
+    private GraphicsText label;
 
     private static final double HEAP_GAP = 10;
     private static final double RATIO = 0.6;
     private static final int BEAN_UPPER_BOUND = 6;
+    private static final double STARTING_X = 20;
+    private static final String PLAYER_TEXT = "It is your turn: ";
+    private static final String N_POSITION = "You have a winning move!";
+    private static final String P_POSITION = "Computer will always win!";
+
 
     public Board(int width, int height, int numGrid) {
         super("Nim Game", width, height);
@@ -34,10 +44,17 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         this.selectedBeanId = -1;
         this.isFirstPlayer = true;
 
+        createText();
         createBoard();
         createButton();
 
         addMouseListener(this);
+    }
+
+    private void createText() {
+        label = new GraphicsText(PLAYER_TEXT, (float) STARTING_X, 50.0f);
+        label.setFont(new Font("SanSerif", Font.PLAIN, 24));
+        add(label);
     }
 
     private void createBoard(){
@@ -56,8 +73,8 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     }
 
     private void createButton(){
-        JButton b = new JButton("Click Here");
-        b.setBounds(50,100,95,30);
+        JButton b = new JButton("Finish My Turn");
+        b.setBounds(50,100,200,30);
         add(b);
         b.addActionListener(this);
     }
@@ -75,27 +92,29 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
      * @param e
      */
     @Override
-    public void mouseClicked(MouseEvent e) {
-        double x = e.getX();
-        double y = e.getY();
+    public void mouseClicked(MouseEvent e) {}
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        x = e.getX();
+        y = e.getY();
         GraphicsObject gObj = getElementAt(x, y);
         if (gObj instanceof Heap) {
-            Heap clickedHeap = (Heap) gObj;
+            clickedHeap = (Heap) gObj;
             int index = clickedHeap.getId();
             if (index == -1) {
                 System.out.println("ERROR");
             } else {
                 selectedBeanId = index;
-                clickedHeap.removeBeanInsideHeap(x, y);
+                clickedHeap.colorBeanInsideHeap(x, y, Color.RED);
             }
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+        clickedHeap.removeBeanInsideHeap(x,y);
+    }
 
     @Override
     public void mouseEntered(MouseEvent e) {}
@@ -106,7 +125,9 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         isFirstPlayer = !isFirstPlayer;
-        System.out.println(isFirstPlayer);
-
+        if(!isFirstPlayer) {
+            NimSum n = new NimSum(heaps);
+            n.makeNextMove();
+        }
     }
 }

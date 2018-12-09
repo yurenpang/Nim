@@ -2,7 +2,9 @@ import comp124graphics.GraphicsGroup;
 import comp124graphics.GraphicsObject;
 import comp124graphics.Rectangle;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class Heap extends GraphicsGroup {
@@ -10,6 +12,8 @@ public class Heap extends GraphicsGroup {
     private int id;
     private int numBean;
     private ArrayList<Bean> beans;
+    private boolean isClicked;
+    private int beanSize;
 
     private static final double X_BEAN_LEFT_BOUND = 3;
     private static final double Y_BEAN_UPPER_BOUND = 3;
@@ -20,7 +24,10 @@ public class Heap extends GraphicsGroup {
         this.id = id;
         this.numBean = numBean;
         this.beans = new ArrayList<Bean>();
+        this.isClicked = false;
         createHeap();
+
+        beanSize = beans.size();
     }
 
     /**
@@ -67,7 +74,57 @@ public class Heap extends GraphicsGroup {
         System.out.println(currentObject);
         if(currentObject instanceof Bean) {
             remove(currentObject);
+            beans.remove(currentObject);
         }
+        beanSize = beans.size();
+    }
+
+    public void colorBeanInsideHeap(double clickedX, double clickedY, Color color) {
+        GraphicsObject currentObject = getElementAt(clickedX, clickedY);
+        System.out.println(currentObject);
+        if(currentObject instanceof Bean) {
+            Bean b = (Bean) currentObject;
+            b.setFillColor(color);
+        }
+    }
+
+    public void removeeBeansAI() {
+        Iterator<Bean> iter = beans.listIterator(beanSize);
+        while(iter.hasNext()){
+            Bean b = iter.next();
+            remove(b);
+            iter.remove();
+        }
+        System.out.println(beanSizeInAHeap());
+    }
+
+    public ArrayList<Bean> getBeansInAHeap() {
+        return beans;
+    }
+
+    public int beanSizeInAHeap(){
+        return beans.size();
+    }
+
+    public void setBeanSize(int beanSize){
+        this.beanSize = beanSize;
+    }
+
+    public void PPositionRemove() {
+        beans.remove(beans.size()-1);
+    }
+    public int getBeanSize(){
+        return beanSize;
+    }
+
+
+
+    public boolean getisClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
     }
 
     public int getId() {
