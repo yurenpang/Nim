@@ -111,20 +111,8 @@ public class Heap extends GraphicsGroup {
     }
 
     public void PPositionRemove() {
-        beans.remove(beans.size()-1);
-    }
-    public int getBeanSize(){
-        return beanSize;
-    }
-
-
-
-    public boolean getisClicked() {
-        return isClicked;
-    }
-
-    public void setClicked(boolean clicked) {
-        isClicked = clicked;
+        Bean b = beans.remove(beans.size()-1);
+        remove(b);
     }
 
     public int getId() {

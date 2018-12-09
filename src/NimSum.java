@@ -2,25 +2,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class NimSum {
-    private HashMap<Heap, ArrayList<Bean>> nimMap;
     private HashMap<Integer, Integer> sizeMap;
     private Heap[] heaps;
 
     public NimSum(Heap[] heaps){
-        this.nimMap = new HashMap<>();
         this.sizeMap = new HashMap<>();
         this.heaps = heaps;
 
-        createMap();
+        updateMap();
     }
 
-    private void createMap() {
+    public void updateMap() {
         for (Heap h : heaps) {
-            nimMap.put(h, h.getBeansInAHeap());
             sizeMap.put(h.getId(), h.beanSizeInAHeap());
         }
 
-        System.out.println(sizeMap);
+        System.out.println("New map: " + sizeMap);
     }
 
     private int calculateNimSum() {
@@ -33,10 +30,13 @@ public class NimSum {
 
     public void makeNextMove() {
         int sum = calculateNimSum();
+        System.out.println("The nim sum: " + sum);
         if(sum == 0) {
             for(Heap h : heaps) {
                 if(h.beanSizeInAHeap() > 0){
                     h.PPositionRemove();
+                    h.setBeanSize(h.beanSizeInAHeap() ^ sum);
+                    updateMap();
                     break;
                 }
             }
@@ -47,13 +47,16 @@ public class NimSum {
                 power = power << 1;
             }
             power = power >> 1;
-            System.out.println(power);
+            System.out.println("The power is:" + power);
 
             for (Heap h : heaps) {
                 int beanSize = h.beanSizeInAHeap();
-                if (beanSize >= power) {
-                    h.setBeanSize(beanSize ^ sum);
+                System.out.println("The bean size is: " + beanSize);
+                if (beanSize >= power && (beanSize ^ sum) <= beanSize) {
+                    System.out.println("The bean^sum is: " + (beanSize ^ sum));
+                    h.setBeanSize((beanSize ^ sum));
                     h.removeeBeansAI();
+                    updateMap();
                     break;
                 }
             }

@@ -22,6 +22,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     private Heap clickedHeap;
     private double x,y;
     private GraphicsText label;
+    private NimSum n;
 
     private static final double HEAP_GAP = 10;
     private static final double RATIO = 0.6;
@@ -47,6 +48,8 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         createText();
         createBoard();
         createButton();
+
+        this.n = new NimSum(heaps);
 
         addMouseListener(this);
     }
@@ -125,9 +128,10 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         isFirstPlayer = !isFirstPlayer;
-        if(!isFirstPlayer) {
-            NimSum n = new NimSum(heaps);
+        if(isFirstPlayer == false) {
+            n.updateMap();
             n.makeNextMove();
+            isFirstPlayer = true;
         }
     }
 }
