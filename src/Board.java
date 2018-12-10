@@ -89,7 +89,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     }
 
     public static void main(String [] args) {
-        Board b = new Board(1000, 1000, 5);
+        Board b = new Board(1000, 500, 5);
     }
 
     /**
@@ -141,6 +141,8 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         } else {
             n.updateMap();
             n.makeNextMove();
+            clickedHeap.setClickable(true);
+            clickedHeap = null;
             isFirstPlayer = true;
         }
     }
