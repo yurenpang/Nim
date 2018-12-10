@@ -23,6 +23,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     private double x,y;
     private GraphicsText label;
     private NimSum n;
+    private int moveStep;
 
     private static final double HEAP_GAP = 10;
     private static final double RATIO = 0.6;
@@ -44,6 +45,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         this.selectedHeapId = -1;
         this.selectedBeanId = -1;
         this.isFirstPlayer = true;
+        this.moveStep = 0;
 
         createText();
         createBoard();
@@ -103,20 +105,27 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         y = e.getY();
         GraphicsObject gObj = getElementAt(x, y);
         if (gObj instanceof Heap) {
-            clickedHeap = (Heap) gObj;
-            int index = clickedHeap.getId();
-            if (index == -1) {
-                System.out.println("ERROR");
+            if(clickedHeap == null || gObj.equals(clickedHeap)) {
+                clickedHeap = (Heap) gObj;
+                clickedHeap.setClickable(false);
+                int index = clickedHeap.getId();
+                if (index == -1) {
+                    System.out.println("ERROR");
+                } else {
+                    selectedBeanId = index;
+                    clickedHeap.colorBeanInsideHeap(x, y, Color.RED);
+                }
             } else {
-                selectedBeanId = index;
-                clickedHeap.colorBeanInsideHeap(x, y, Color.RED);
+                label.setText("You can only choose a heap");
             }
+
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         clickedHeap.removeBeanInsideHeap(x,y);
+        isFirstPlayer = false;
     }
 
     @Override
@@ -127,8 +136,9 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        isFirstPlayer = !isFirstPlayer;
-        if(isFirstPlayer == false) {
+        if(isFirstPlayer) {
+            label.setText("You need to make a move");
+        } else {
             n.updateMap();
             n.makeNextMove();
             isFirstPlayer = true;

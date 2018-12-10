@@ -12,8 +12,8 @@ public class Heap extends GraphicsGroup {
     private int id;
     private int numBean;
     private ArrayList<Bean> beans;
-    private boolean isClicked;
     private int beanSize;
+    private boolean isClickable;
 
     private static final double X_BEAN_LEFT_BOUND = 3;
     private static final double Y_BEAN_UPPER_BOUND = 3;
@@ -24,7 +24,7 @@ public class Heap extends GraphicsGroup {
         this.id = id;
         this.numBean = numBean;
         this.beans = new ArrayList<Bean>();
-        this.isClicked = false;
+        this.isClickable = true;
         createHeap();
 
         beanSize = beans.size();
@@ -117,6 +117,14 @@ public class Heap extends GraphicsGroup {
 
     public int getId() {
         return id;
+    }
+
+    public boolean isClickable() {
+        return isClickable;
+    }
+
+    public void setClickable(boolean isClickable) {
+        this.isClickable = isClickable;
     }
 
     public void setId(int id) {
