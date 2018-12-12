@@ -98,10 +98,6 @@ public class Heap extends GraphicsGroup {
         System.out.println(getbeanSizeInAHeap());
     }
 
-    public ArrayList<Bean> getBeansInAHeap() {
-        return beans;
-    }
-
     public int getbeanSizeInAHeap(){
         return beans.size();
     }
