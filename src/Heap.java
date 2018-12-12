@@ -119,10 +119,6 @@ public class Heap extends GraphicsGroup {
         return id;
     }
 
-    public boolean isClickable() {
-        return isClickable;
-    }
-
     public void setClickable(boolean isClickable) {
         this.isClickable = isClickable;
     }
