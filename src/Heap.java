@@ -88,21 +88,21 @@ public class Heap extends GraphicsGroup {
         }
     }
 
-    public void removeeBeansAI() {
+    public void removeBeansAI() {
         Iterator<Bean> iter = beans.listIterator(beanSize);
         while(iter.hasNext()){
             Bean b = iter.next();
             remove(b);
             iter.remove();
         }
-        System.out.println(beanSizeInAHeap());
+        System.out.println(getbeanSizeInAHeap());
     }
 
     public ArrayList<Bean> getBeansInAHeap() {
         return beans;
     }
 
-    public int beanSizeInAHeap(){
+    public int getbeanSizeInAHeap(){
         return beans.size();
     }
 
@@ -110,7 +110,7 @@ public class Heap extends GraphicsGroup {
         this.beanSize = beanSize;
     }
 
-    public void PPositionRemove() {
+    public void removeLastBean() {
         Bean b = beans.remove(beans.size()-1);
         remove(b);
     }
