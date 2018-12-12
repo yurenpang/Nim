@@ -134,6 +134,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
 
     /**
      * Finish a player's turn and it is the computer's turn
+     * Finish a player's turn and it is the computer's turn
      * @param e
      */
     @Override
