@@ -1,4 +1,5 @@
 import comp124graphics.CanvasWindow;
+import comp124graphics.GraphicsGroup;
 import comp124graphics.GraphicsObject;
 import comp124graphics.GraphicsText;
 
@@ -8,9 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
-public class Board extends CanvasWindow implements MouseListener, ActionListener {
+public class Board extends GraphicsGroup {
     private boolean isFirstPlayer;
     private double width, height;
     private double heapWidth;
@@ -21,6 +24,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     private Heap clickedHeap;
     private GraphicsText label;
     private NimSum n;
+    private HashMap<Integer, Integer> heapBeanMap;
 
     private static final double HEAP_GAP = 10;
     private static final double RATIO = 0.6;
@@ -29,8 +33,9 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
     private static final String PLAYER_TEXT = "It is your turn: ";
 
 
-    public Board(int width, int height, int numGrid) {
-        super("Nim Game", width, height);
+    public Board(double width, double height, int numGrid) {
+//        super("Nim Game", width, height);
+        super(0, 0);
         this.width = width;
         this.height = height;
         this.numGrid = numGrid;
@@ -38,23 +43,13 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         this.sideLength = calculateSideLength();
         this.heaps = new Heap[numGrid];
         this.isFirstPlayer = true;
+        this.clickedHeap = null;
+        this.heapBeanMap = new HashMap<>();
 
-        createText();
         createBoard();
-        createButton();
+        updateMap();
 
-        this.n = new NimSum(heaps);
-
-        addMouseListener(this);
-    }
-
-    /**
-     * This creates the initial Game Text at the top of the screen
-     */
-    private void createText() {
-        label = new GraphicsText(PLAYER_TEXT, (float) STARTING_X, 50.0f);
-        label.setFont(new Font("SanSerif", Font.PLAIN, 24));
-        add(label);
+        this.n = new NimSum(heapBeanMap);
     }
 
     /**
@@ -66,7 +61,7 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         double yPos = 0.5 * (height - sideLength);
         for(int i = 0; i < numGrid; i++){
             Random random = new Random();
-            int numBean = 1+random.nextInt(BEAN_UPPER_BOUND);
+            int numBean = 1+random.nextInt(((int)(sideLength/Bean.RADIUS_LENGTH)));
             Heap heap = new Heap(xPos, yPos, sideLength, id, numBean);
             heaps[i] = heap;
             add(heap);
@@ -75,14 +70,63 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         }
     }
 
+    public String manipulateBoard(double clickedX, double clickedY, boolean isColor){
+        GraphicsObject currentGroup = getElementAt(clickedX, clickedY);
+        if(currentGroup instanceof Heap) {
+            if(clickedHeap == null || currentGroup.equals(clickedHeap)) {
+                clickedHeap = (Heap) currentGroup;
+                if (isColor) {
+                    clickedHeap.colorBeanInsideHeap(clickedX, clickedY, Color.RED);
+                } else {
+                    clickedHeap.removeBeanInsideHeap(clickedX, clickedY);
+                }
+                clickedHeap.setClickable(false);
+                return "You can click \' Finish My Turn \' to let the computer move";
+            } else {
+                return "You can only choose a heap";
+            }
+        }
+        return "Please click on the black beans";
+    }
+
+    public void compMove() {
+        updateMap();
+        ArrayList<Integer> heapIdBeans = n.nextHeapIdBeans();
+        heaps[heapIdBeans.get(0)].removeBeans(heapIdBeans.get(1));
+    }
+
     /**
-     * This is the button the player needs to click after his/her turn
+     * Update the number of beans in the map
      */
-    private void createButton(){
-        JButton b = new JButton("Finish My Turn");
-        b.setBounds(50,100,200,30);
-        add(b);
-        b.addActionListener(this);
+    private void updateMap() {
+        for (Heap h : heaps) {
+            int beanSizeInHeap = h.getbeanSizeInAHeap();
+            int heapId = h.getId();
+            heapBeanMap.put(heapId, beanSizeInHeap);
+        }
+    }
+
+    public boolean isOver() {
+        for(int i = 0; i < heaps.length; i++) {
+            if(heaps[i].getbeanSizeInAHeap() != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isPlayWon() {
+        int counter = 0;
+        for(int i = 0; i < heaps.length; i++) {
+            if(heaps[i].getbeanSizeInAHeap() != 0) {
+                counter ++;
+            }
+        }
+        if(counter == 1){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -93,75 +137,83 @@ public class Board extends CanvasWindow implements MouseListener, ActionListener
         return (heapWidth + numGrid * HEAP_GAP) / numGrid;
     }
 
-    /**
-     * When the user press the mouse
-     * Selects a graphicObject:
-     * 1. change the color of the color of the bean (interactivity with the user) if a bean is clicked
-     * 2. limit the user to one heap
-     * 3. do nothing when other parts of the screen is clicked
-     * @param e
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        x = e.getX();
-        y = e.getY();
-        GraphicsObject gObj = getElementAt(x, y);
-        if (gObj instanceof Heap) {
-            if(clickedHeap == null || gObj.equals(clickedHeap)) {
-                clickedHeap = (Heap) gObj;
-                clickedHeap.setClickable(false);
-                int index = clickedHeap.getId();
-                if (index == -1) {
-                    System.out.println("ERROR");
-                } else {
-                    clickedHeap.colorBeanInsideHeap(x, y, Color.RED);
-                }
-            } else {
-                label.setText("You can only choose a heap");
-            }
-        }
+    public Heap getClickedHeap() {
+        return clickedHeap;
     }
 
-    /**
-     * Remove the clicked bean after the mouse is released
-     * @param e
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        clickedHeap.removeBeanInsideHeap(x,y);
-        isFirstPlayer = false;
+    public void setClickedHeap(Heap heap) {
+        clickedHeap = heap;
     }
 
-    /**
-     * Finish a player's turn and it is the computer's turn
-     * Finish a player's turn and it is the computer's turn
-     * @param e
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(isFirstPlayer) {
-            label.setText("You need to make a move");
-        } else {
-            n.updateMap();
-            n.makeNextMove();
-            clickedHeap.setClickable(true);
-            clickedHeap = null;
-            isFirstPlayer = true;
-        }
-    }
+//    /**
+//     * When the user press the mouse
+//     * Selects a graphicObject:
+//     * 1. change the color of the color of the bean (interactivity with the user) if a bean is clicked
+//     * 2. limit the user to one heap
+//     * 3. do nothing when other parts of the screen is clicked
+//     * @param e
+//     */
+//    @Override
+//    public void mousePressed(MouseEvent e) {
+//        x = e.getX();
+//        y = e.getY();
+//        GraphicsObject gObj = getElementAt(x, y);
+//        if (gObj instanceof Heap) {
+//            if(clickedHeap == null || gObj.equals(clickedHeap)) {
+//                clickedHeap = (Heap) gObj;
+//                clickedHeap.setClickable(false);
+//                int index = clickedHeap.getId();
+//                if (index == -1) {
+//                    System.out.println("ERROR");
+//                } else {
+//                    clickedHeap.colorBeanInsideHeap(x, y, Color.RED);
+//                }
+//            } else {
+//                label.setText("You can only choose a heap");
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Remove the clicked bean after the mouse is released
+//     * @param e
+//     */
+//    @Override
+//    public void mouseReleased(MouseEvent e) {
+//        clickedHeap.removeBeanInsideHeap(x,y);
+//        isFirstPlayer = false;
+//    }
+//
+//    /**
+//     * Finish a player's turn and it is the computer's turn
+//     * Finish a player's turn and it is the computer's turn
+//     * @param e
+//     */
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        if(isFirstPlayer) {
+//            label.setText("You need to make a move");
+//        } else {
+//            n.updateMap();
+//            n.makeNextMove();
+//            clickedHeap.setClickable(true);
+//            clickedHeap = null;
+//            isFirstPlayer = true;
+//        }
+//    }
+//
+//    @Override
+//    public void mouseClicked(MouseEvent e) {}
+//
+//    @Override
+//    public void mouseEntered(MouseEvent e) {}
+//
+//    @Override
+//    public void mouseExited(MouseEvent e) {}
+//
 
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
-
-
-    public static void main(String [] args) {
-        Board b = new Board(1000, 500, 5);
-    }
+//    public static void main(String [] args) {
+//        Board b = new Board(1000, 500, 5);
+//    }
 
 }

@@ -1,38 +1,30 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class NimSum {
-    private HashMap<Integer, Integer> sizeMap;
-    private Heap[] heaps;
-    private boolean isEmpty;   //Determine there is no beans; it's time to get out of the nimsum object
+    private HashMap<Integer, Integer> beanHeapMap;
+    private ArrayList<Integer> returnheapIDbeans;
 
-    public NimSum(Heap[] heaps){
-        this.sizeMap = new HashMap<>();
-        this.heaps = heaps;
-        this.isEmpty = false;
-
-        updateMap();
-    }
-
-    /**
-     * Update the number of beans in the map
-     */
-    public void updateMap() {
-        for (Heap h : heaps) {
-            sizeMap.put(h.getId(), h.getbeanSizeInAHeap());
-        }
+    public NimSum(HashMap<Integer, Integer> beanHeapMap){
+        this.beanHeapMap = beanHeapMap;
+        this.returnheapIDbeans = new ArrayList<>(2);
+        System.out.println("returnheapIDbeans: " + returnheapIDbeans);
     }
 
     /**
      * Make the N-position and P-position move based on the nim sum
+     * get Heap ID and numBeans in the heap
      */
-    public void makeNextMove() {
+    public ArrayList<Integer> nextHeapIdBeans() {
         int sum = calculateNimSum();
         if(sum == 0) {
-            pMove(sum);
+            pMove();
         } else {
             int power = calculateBiggestPowerofTwo(sum);
             nMove(power, sum);
         }
+        System.out.println("returnheapIDbeans after a move: " + returnheapIDbeans);
+        return returnheapIDbeans;
     }
 
     /**
@@ -41,8 +33,8 @@ public class NimSum {
      */
     private int calculateNimSum() {
         int sum = 0;
-        for (Integer i : sizeMap.keySet()){
-            sum = sum ^ sizeMap.get(i);
+        for (Integer i : beanHeapMap.keySet()){
+            sum = sum ^ beanHeapMap.get(i);
         }
         return sum;
     }
@@ -68,12 +60,13 @@ public class NimSum {
      * It will remove the last ball in the first heap (which still has beans)
      * @param sum
      */
-    private void pMove(int sum) {
-        for(Heap h : heaps) {
-            if(h.getbeanSizeInAHeap() > 0){
-                h.removeLastBean();
-                h.setBeanSize(h.getbeanSizeInAHeap() ^ sum);
-                updateMap();
+    private void pMove() {
+        returnheapIDbeans.clear();
+        for (Integer heapID : beanHeapMap.keySet()) {
+            int numBeans = beanHeapMap.get(heapID);
+            if (numBeans > 0) {
+                returnheapIDbeans.add(heapID);
+                returnheapIDbeans.add(numBeans-1);
                 break;
             }
         }
@@ -87,22 +80,15 @@ public class NimSum {
      * @param sum
      */
     private void nMove(int power, int sum) {
-        for (Heap h : heaps) {
-            int beanSize = h.getbeanSizeInAHeap();
-            if (beanSize >= power && (beanSize ^ sum) <= beanSize) {
-                h.setBeanSize((beanSize ^ sum));
-                h.removeBeansAI();
-                updateMap();
+        returnheapIDbeans.clear();
+        for (Integer heapID : beanHeapMap.keySet()) {
+            int numBeans = beanHeapMap.get(heapID);
+            if (numBeans >= power && (numBeans ^ sum) <= numBeans) {
+                returnheapIDbeans.add(heapID);
+                returnheapIDbeans.add(numBeans^sum);
                 break;
             }
         }
     }
 
-    public int getBeanSizeAfterComputer() {
-        int counter = 0;
-        for (Heap h:heaps) {
-            counter = counter + h.getbeanSizeInAHeap();
-        }
-        return counter;
-    }
 }

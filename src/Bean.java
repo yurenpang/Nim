@@ -1,7 +1,7 @@
 import comp124graphics.Ellipse;
 
 public class Bean extends Ellipse {
-    public static final double RADIUS_LENGTH = 20;
+    public static final double RADIUS_LENGTH = 17;
 
     private int id;
 

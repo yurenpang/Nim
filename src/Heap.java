@@ -88,8 +88,8 @@ public class Heap extends GraphicsGroup {
         }
     }
 
-    public void removeBeansAI() {
-        Iterator<Bean> iter = beans.listIterator(beanSize);
+    public void removeBeans(int newBeanSize) {
+        Iterator<Bean> iter = beans.listIterator(newBeanSize);
         while(iter.hasNext()){
             Bean b = iter.next();
             remove(b);
