@@ -7,9 +7,11 @@ Make sure you have at least Java SE 7 version
 ### Installing
 <ul>
   <li> Download the java game file above
+  
   ```
-    Nim.jar
+  Nim.jar
   ```
+  
   </li>
   <li> Open your terminal </li>
   
