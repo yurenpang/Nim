@@ -26,13 +26,17 @@ Make sure you have at least Java SE 7 version
 
 * The Main Page 
 
+<p align="center">
 ![Gameboard](res/layout.png)
+</p>
 
 * Nim game is a combinatorial game that starts with a few heaps of beans;
 * In each turn of the game, a player can remove some or all of the beans in a single heap. A player cannot remove the beans from two heaps at the same time.
 * The player plays the game one after another, and the player who makes the last move win the game.
 
+<p align="center">
 ![Binary Representation](res/nimsum.png)
+</p>
 
 We can understand this game by converting the number of beans in a heap to binary number. According to the graph above, each row represents the number of beans in a heap. In this case, they are 27, 9, 7, and 24. We conduct a "XOR" operation to these and the result is 13.
 
