@@ -6,7 +6,11 @@ Make sure you have at least Java SE 7 version
 
 ### Installing
 <ul>
-  <li> Download Nim.jar file following the directory: out/artifacts/Nim_jar</li>
+  <li> Download the java game file above
+  ```
+    Nim.jar
+  ```
+  </li>
   <li> Open your terminal </li>
   
   ```
