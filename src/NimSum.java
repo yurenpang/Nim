@@ -8,7 +8,6 @@ public class NimSum {
     public NimSum(HashMap<Integer, Integer> beanHeapMap){
         this.beanHeapMap = beanHeapMap;
         this.returnheapIDbeans = new ArrayList<>(2);
-        System.out.println("returnheapIDbeans: " + returnheapIDbeans);
     }
 
     /**
@@ -23,12 +22,11 @@ public class NimSum {
             int power = calculateBiggestPowerofTwo(sum);
             nMove(power, sum);
         }
-        System.out.println("returnheapIDbeans after a move: " + returnheapIDbeans);
         return returnheapIDbeans;
     }
 
     /**
-     * helper function to calculate the nim sum (XOR)
+     * Helper function to calculate the nim sum (XOR)
      * @return
      */
     private int calculateNimSum() {
@@ -58,7 +56,6 @@ public class NimSum {
      * P-position when the nim sum if 0
      * That is, the computer does not have a winning strategy unless the player makes a mistake in the next few steps
      * It will remove the last ball in the first heap (which still has beans)
-     * @param sum
      */
     private void pMove() {
         returnheapIDbeans.clear();

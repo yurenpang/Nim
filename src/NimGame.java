@@ -26,7 +26,13 @@ public class NimGame extends CanvasWindow implements MouseListener {
     private static final String WIN_MESSAGE = "Congratualation! You win.";
     private static final String LOSE_MESSAGE = "Sorry, you lost. But you can try again";
 
-
+    /**
+     * This is the game interface including the CanvasWindow
+     * Inside it has a game board, a "Finish My Turn" Button, a "Play Again Button", a game info label
+     * @param width
+     * @param height
+     * @param numGrid
+     */
     public NimGame(int width, int height, int numGrid) {
         super("Nim Game", width, height);
         this.width = width;
@@ -37,11 +43,7 @@ public class NimGame extends CanvasWindow implements MouseListener {
         createLabel();
         createBoard();
 
-        /**
-         * This is the button the player needs to click after his/her turn
-         * Finish a player's turn and it is the computer's turn
-         * @param e
-         */
+        //Finish a player's turn and it is the computer's turn
         finishBtn = new JButton("Finish My Turn");
         finishBtn.setBounds(200, 400, 200, 30);
         add(finishBtn);
@@ -57,18 +59,16 @@ public class NimGame extends CanvasWindow implements MouseListener {
                             board.getClickedHeap().setClickable(true);
                             board.setClickedHeap(null);
                             if(board.isOver()) {
-                                label.setText(LOSE_MESSAGE);
+                                label.setText(LOSE_MESSAGE);  //Game is over
                             } else if (board.isPlayWon()) {
-                                label.setText(WIN_MESSAGE);
+                                label.setText(WIN_MESSAGE);   //A special circumstance when the user wins
                             }
                         }
                     }
                 }
         );
 
-//        board = new Board();
-
-
+        //This is the button the player chooses to click after a game to restart the game
         replayBtn = new JButton("Play Again");
         replayBtn.setBounds(550, 400, 200, 30);
         add(replayBtn);
@@ -84,6 +84,7 @@ public class NimGame extends CanvasWindow implements MouseListener {
                 }
         );
 
+        //This add the mouselistener to click event
         addMouseListener(this);
     }
 
@@ -96,6 +97,9 @@ public class NimGame extends CanvasWindow implements MouseListener {
         add(label);
     }
 
+    /**
+     * This creates the Game Board and adds it to the screen
+     */
     private void createBoard(){
         board = new Board(width, height, numGrid);
         add(board);

@@ -16,7 +16,6 @@ public class Heap extends GraphicsGroup {
     private boolean isClickable;
 
     private static final double X_BEAN_LEFT_BOUND = 3;
-    private static final double Y_BEAN_UPPER_BOUND = 3;
 
     public Heap(double x, double y, double heapLength, int id, int numBean){
         super(x,y);
@@ -71,7 +70,6 @@ public class Heap extends GraphicsGroup {
      */
     public void removeBeanInsideHeap(double clickedX, double clickedY) {
         GraphicsObject currentObject = getElementAt(clickedX, clickedY);
-        System.out.println(currentObject);
         if(currentObject instanceof Bean) {
             remove(currentObject);
             beans.remove(currentObject);
@@ -79,15 +77,10 @@ public class Heap extends GraphicsGroup {
         beanSize = beans.size();
     }
 
-    public void colorBeanInsideHeap(double clickedX, double clickedY, Color color) {
-        GraphicsObject currentObject = getElementAt(clickedX, clickedY);
-        System.out.println(currentObject);
-        if(currentObject instanceof Bean) {
-            Bean b = (Bean) currentObject;
-            b.setFillColor(color);
-        }
-    }
-
+    /**
+     * Remove the corresponding number of beans inside this heap
+     * @param newBeanSize
+     */
     public void removeBeans(int newBeanSize) {
         Iterator<Bean> iter = beans.listIterator(newBeanSize);
         while(iter.hasNext()){
@@ -95,20 +88,18 @@ public class Heap extends GraphicsGroup {
             remove(b);
             iter.remove();
         }
-        System.out.println(getbeanSizeInAHeap());
+    }
+
+    public void colorBeanInsideHeap(double clickedX, double clickedY, Color color) {
+        GraphicsObject currentObject = getElementAt(clickedX, clickedY);
+        if(currentObject instanceof Bean) {
+            Bean b = (Bean) currentObject;
+            b.setFillColor(color);
+        }
     }
 
     public int getbeanSizeInAHeap(){
         return beans.size();
-    }
-
-    public void setBeanSize(int beanSize){
-        this.beanSize = beanSize;
-    }
-
-    public void removeLastBean() {
-        Bean b = beans.remove(beans.size()-1);
-        remove(b);
     }
 
     public int getId() {
@@ -117,9 +108,5 @@ public class Heap extends GraphicsGroup {
 
     public void setClickable(boolean isClickable) {
         this.isClickable = isClickable;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
