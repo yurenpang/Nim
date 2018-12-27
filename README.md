@@ -22,10 +22,6 @@ Make sure you have at least Java SE 7 version
 
 ### Explanation
 
-### Deployment 
-
-* The Main Page 
-
 <p align="center">
     <img src="res/layout.png" alt="Gameboard"/>
 </p>
